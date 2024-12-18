@@ -1,6 +1,6 @@
 streamlit
 google-generativeai
 pydub
-speech_recognition
+SpeechRecognition
 python-dotenv 
 
