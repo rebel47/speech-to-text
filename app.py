@@ -92,12 +92,12 @@ if uploaded_file:
                 mime="text/plain"
             )
 
-        # Optional: Use Gemini for post-processing
-        if st.checkbox("Summarize Transcription (Gemini AI)"):
-            with st.spinner("Summarizing with Gemini..."):
-                try:
-                    summary = model.generate_text(transcription, length="medium")
-                    st.write("### Summarized Transcription")
-                    st.text_area("Summary", summary, height=200)
-                except Exception as e:
-                    st.error(f"Error summarizing transcription: {e}")
+        # # Optional: Use Gemini for post-processing
+        # if st.checkbox("Summarize Transcription (Gemini AI)"):
+        #     with st.spinner("Summarizing with Gemini..."):
+        #         try:
+        #             summary = model.generate_text(transcription, length="medium")
+        #             st.write("### Summarized Transcription")
+        #             st.text_area("Summary", summary, height=200)
+        #         except Exception as e:
+        #             st.error(f"Error summarizing transcription: {e}")
