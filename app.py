@@ -54,7 +54,7 @@ def transcribe_audio_with_google(audio_path, chunk_length_ms=60000, overlap_ms=2
     return " ".join(transcription)
 
 # Streamlit UI
-st.title("Lina Audio to Text Transcription")
+st.title("Lina's Audio to Text Transcription")
 st.write("Upload an audio file, and we'll transcribe it into text using chunk processing.")
 
 uploaded_file = st.file_uploader("Upload an audio file", type=["mp3", "wav", "m4a", "ogg"])
