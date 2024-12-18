@@ -10,7 +10,7 @@ import speech_recognition as sr
 load_dotenv()
 configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-# Initialize Gemini model (if needed later)
+# Initialize Gemini model (optional for post-processing)
 model = GenerativeModel("gemini-1.5-flash")
 
 def split_audio(audio_path, chunk_length_ms=60000, overlap_ms=2000):
@@ -36,9 +36,9 @@ def transcribe_chunk(chunk, recognizer):
             try:
                 return recognizer.recognize_google(audio_data)
             except sr.RequestError:
-                return "Error: API unavailable or unresponsive."
+                return "[Error: API unavailable or unresponsive]"
             except sr.UnknownValueError:
-                return "Error: Unable to recognize speech."
+                return "[Error: Unable to recognize speech]"
 
 def transcribe_audio_with_google(audio_path, chunk_length_ms=60000, overlap_ms=2000):
     """Transcribe a long audio file by splitting it into smaller chunks."""
@@ -46,10 +46,12 @@ def transcribe_audio_with_google(audio_path, chunk_length_ms=60000, overlap_ms=2
     chunks = split_audio(audio_path, chunk_length_ms, overlap_ms)
     transcription = []
 
+    progress_bar = st.progress(0)
     for idx, chunk in enumerate(chunks):
         st.write(f"Transcribing chunk {idx + 1}/{len(chunks)}...")
         text = transcribe_chunk(chunk, recognizer)
         transcription.append(text)
+        progress_bar.progress((idx + 1) / len(chunks))
 
     return " ".join(transcription)
 
@@ -81,3 +83,21 @@ if uploaded_file:
             transcription = transcribe_audio_with_google(temp_path, chunk_length_ms=60000, overlap_ms=2000)
             st.write("### Transcription")
             st.text_area("Transcription Output", transcription, height=300)
+
+            # Download transcription
+            st.download_button(
+                label="Download Transcription",
+                data=transcription,
+                file_name="transcription.txt",
+                mime="text/plain"
+            )
+
+        # Optional: Use Gemini for post-processing
+        if st.checkbox("Summarize Transcription (Gemini AI)"):
+            with st.spinner("Summarizing with Gemini..."):
+                try:
+                    summary = model.generate_text(transcription, length="medium")
+                    st.write("### Summarized Transcription")
+                    st.text_area("Summary", summary, height=200)
+                except Exception as e:
+                    st.error(f"Error summarizing transcription: {e}")
