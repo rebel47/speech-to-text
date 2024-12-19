@@ -27,20 +27,20 @@ def convert_audio_to_wav(input_path, output_path):
     audio = audio.set_frame_rate(16000).set_channels(1)
     audio.export(output_path, format="wav")
 
-def transcribe_chunk(chunk, recognizer):
-    """Transcribe a single chunk of audio."""
+def transcribe_chunk(chunk, recognizer, language="en-US"):
+    """Transcribe a single chunk of audio in the specified language."""
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_chunk_file:
         chunk.export(temp_chunk_file.name, format="wav")
         with sr.AudioFile(temp_chunk_file.name) as source:
             audio_data = recognizer.record(source)
             try:
-                return recognizer.recognize_google(audio_data)
+                return recognizer.recognize_google(audio_data, language=language)
             except sr.RequestError:
                 return "[Error: API unavailable or unresponsive]"
             except sr.UnknownValueError:
                 return "[Error: Unable to recognize speech]"
 
-def transcribe_audio_with_google(audio_path, chunk_length_ms=60000, overlap_ms=2000):
+def transcribe_audio_with_google(audio_path, chunk_length_ms=60000, overlap_ms=2000, language="en-US"):
     """Transcribe a long audio file by splitting it into smaller chunks."""
     recognizer = sr.Recognizer()
     chunks = split_audio(audio_path, chunk_length_ms, overlap_ms)
@@ -49,7 +49,7 @@ def transcribe_audio_with_google(audio_path, chunk_length_ms=60000, overlap_ms=2
     progress_bar = st.progress(0)
     for idx, chunk in enumerate(chunks):
         st.write(f"Transcribing chunk {idx + 1}/{len(chunks)}...")
-        text = transcribe_chunk(chunk, recognizer)
+        text = transcribe_chunk(chunk, recognizer, language)
         transcription.append(text)
         progress_bar.progress((idx + 1) / len(chunks))
 
@@ -58,6 +58,22 @@ def transcribe_audio_with_google(audio_path, chunk_length_ms=60000, overlap_ms=2
 # Streamlit UI
 st.title("Lina's Audio to Text Transcription")
 st.write("Upload an audio file, and we'll transcribe it into text using chunk processing.")
+
+# Add language selection
+language = st.selectbox(
+    "Select the language for transcription:",
+    [
+        ("English (US)", "en-US"),
+        ("Dutch", "nl-NL"),  # Added Dutch
+        ("English (UK)", "en-GB"),
+        ("Spanish", "es-ES"),
+        ("French", "fr-FR"),
+        ("German", "de-DE"),
+        ("Hindi", "hi-IN"),
+        ("Chinese (Mandarin)", "zh-CN"),
+        ("Arabic", "ar-SA"),
+    ]
+)
 
 uploaded_file = st.file_uploader("Upload an audio file", type=["mp3", "wav", "m4a", "ogg"])
 
@@ -80,7 +96,7 @@ if uploaded_file:
     # Transcribe the audio file
     if st.button("Transcribe"):
         with st.spinner("Transcribing..."):
-            transcription = transcribe_audio_with_google(temp_path, chunk_length_ms=60000, overlap_ms=2000)
+            transcription = transcribe_audio_with_google(temp_path, chunk_length_ms=60000, overlap_ms=2000, language=language)
             st.write("### Transcription")
             st.text_area("Transcription Output", transcription, height=300)
 
@@ -91,13 +107,3 @@ if uploaded_file:
                 file_name="transcription.txt",
                 mime="text/plain"
             )
-
-        # # Optional: Use Gemini for post-processing
-        # if st.checkbox("Summarize Transcription (Gemini AI)"):
-        #     with st.spinner("Summarizing with Gemini..."):
-        #         try:
-        #             summary = model.generate_text(transcription, length="medium")
-        #             st.write("### Summarized Transcription")
-        #             st.text_area("Summary", summary, height=200)
-        #         except Exception as e:
-        #             st.error(f"Error summarizing transcription: {e}")
