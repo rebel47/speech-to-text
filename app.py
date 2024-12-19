@@ -60,20 +60,21 @@ st.title("Lina's Audio to Text Transcription")
 st.write("Upload an audio file, and we'll transcribe it into text using chunk processing.")
 
 # Add language selection
-language = st.selectbox(
-    "Select the language for transcription:",
-    [
-        ("English (US)", "en-US"),
-        ("Dutch", "nl-NL"), 
-        ("English (UK)", "en-GB"),
-        ("Spanish", "es-ES"),
-        ("French", "fr-FR"),
-        ("German", "de-DE"),
-        ("Hindi", "hi-IN"),
-        ("Chinese (Mandarin)", "zh-CN"),
-        ("Arabic", "ar-SA"),
-    ]
-)
+language_options = {
+    "English (US)": "en-US",
+    "Dutch": "nl-NL",
+    "English (UK)": "en-GB",
+    "Spanish": "es-ES",
+    "French": "fr-FR",
+    "German": "de-DE",
+    "Hindi": "hi-IN",
+    "Chinese (Mandarin)": "zh-CN",
+    "Arabic": "ar-SA",
+}
+
+language_name = st.selectbox("Select the language for transcription:", list(language_options.keys()))
+language = language_options[language_name]
+
 
 uploaded_file = st.file_uploader("Upload an audio file", type=["mp3", "wav", "m4a", "ogg"])
 
