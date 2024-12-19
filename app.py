@@ -64,7 +64,7 @@ language = st.selectbox(
     "Select the language for transcription:",
     [
         ("English (US)", "en-US"),
-        ("Dutch", "nl-NL"),  # Added Dutch
+        ("Dutch", "nl-NL"), 
         ("English (UK)", "en-GB"),
         ("Spanish", "es-ES"),
         ("French", "fr-FR"),
