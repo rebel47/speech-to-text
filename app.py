@@ -28,12 +28,16 @@ def convert_audio_to_wav(input_path, output_path):
     audio.export(output_path, format="wav")
 
 def transcribe_chunk(chunk, recognizer, language="en-US"):
-    """Transcribe a single chunk of audio in the specified language."""
+    """Transcribe a single chunk of audio."""
+    if not isinstance(language, str):
+        raise ValueError(f"Invalid language parameter: {language}")
+
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_chunk_file:
         chunk.export(temp_chunk_file.name, format="wav")
         with sr.AudioFile(temp_chunk_file.name) as source:
             audio_data = recognizer.record(source)
             try:
+                # Pass language to Google Speech API
                 return recognizer.recognize_google(audio_data, language=language)
             except sr.RequestError:
                 return "[Error: API unavailable or unresponsive]"
@@ -49,7 +53,7 @@ def transcribe_audio_with_google(audio_path, chunk_length_ms=60000, overlap_ms=2
     progress_bar = st.progress(0)
     for idx, chunk in enumerate(chunks):
         st.write(f"Transcribing chunk {idx + 1}/{len(chunks)}...")
-        text = transcribe_chunk(chunk, recognizer, language)
+        text = transcribe_chunk(chunk, recognizer, language=language)
         transcription.append(text)
         progress_bar.progress((idx + 1) / len(chunks))
 
@@ -59,7 +63,7 @@ def transcribe_audio_with_google(audio_path, chunk_length_ms=60000, overlap_ms=2
 st.title("Lina's Audio to Text Transcription")
 st.write("Upload an audio file, and we'll transcribe it into text using chunk processing.")
 
-# Add language selection
+# Dropdown for language selection
 language_options = {
     "English (US)": "en-US",
     "Dutch": "nl-NL",
@@ -71,11 +75,11 @@ language_options = {
     "Chinese (Mandarin)": "zh-CN",
     "Arabic": "ar-SA",
 }
-
 language_name = st.selectbox("Select the language for transcription:", list(language_options.keys()))
-language = language_options[language_name]
+language = language_options.get(language_name)
+st.write(f"Selected language: {language} (from {language_name})")
 
-
+# File uploader
 uploaded_file = st.file_uploader("Upload an audio file", type=["mp3", "wav", "m4a", "ogg"])
 
 if uploaded_file:
@@ -106,5 +110,5 @@ if uploaded_file:
                 label="Download Transcription",
                 data=transcription,
                 file_name="transcription.txt",
-                mime="text/plain"
+                mime="text/plain",
             )
