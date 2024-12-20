@@ -1,5 +1,7 @@
 # Lina's Audio to Text Transcription App
 
+This application was inspired by my friend Lina, who needed a free and reliable tool to convert audio files into text. She struggled to find a suitable application that met her requirements, so I built this app to help her out and make audio transcription accessible to everyone.
+
 This is a Streamlit-based application that transcribes audio files into text using Google Speech Recognition. It supports multiple languages and processes long audio files by splitting them into smaller chunks.
 
 ---
@@ -99,4 +101,4 @@ Contributions are welcome! Feel free to submit a pull request or open an issue.
 - [Streamlit](https://streamlit.io)
 - [pydub](https://github.com/jiaaro/pydub)
 - [SpeechRecognition Library](https://pypi.org/project/SpeechRecognition/)
-
+```
