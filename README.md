@@ -1,4 +1,4 @@
-# Lina's Audio to Text Transcription App
+# Audio to Text Transcription App
 
 This application was inspired by my friend Lina, who needed a free and reliable tool to convert audio files into text. She struggled to find a suitable application that met her requirements, so I built this app to help her out and make audio transcription accessible to everyone.
 
