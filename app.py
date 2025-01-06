@@ -52,7 +52,7 @@ def transcribe_audio_with_google(audio_path, chunk_length_ms=60000, overlap_ms=2
 
     progress_bar = st.progress(0)
     for idx, chunk in enumerate(chunks):
-        st.write(f"Transcribing chunk {idx + 1}/{len(chunks)}...")
+        #st.write(f"Transcribing chunk {idx + 1}/{len(chunks)}...")
         text = transcribe_chunk(chunk, recognizer, language=language)
         transcription.append(text)
         progress_bar.progress((idx + 1) / len(chunks))
