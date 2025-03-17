@@ -11,7 +11,7 @@ load_dotenv()
 configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # Initialize Gemini model (optional for post-processing)
-model = GenerativeModel("gemini-1.5-flash")
+model = GenerativeModel("gemini-2.0-flash")
 
 def split_audio(audio_path, chunk_length_ms=60000, overlap_ms=2000):
     """Split audio into smaller chunks with overlap."""
