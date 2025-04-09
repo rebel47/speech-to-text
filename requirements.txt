@@ -1,5 +1,6 @@
 streamlit
-google-generativeai
 pydub
 SpeechRecognition
-python-dotenv 
+python-dotenv
+deepmultilingualpunctuation
+yake
