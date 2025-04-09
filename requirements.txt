@@ -1,6 +1,4 @@
 streamlit
 pydub
 SpeechRecognition
-python-dotenv
-deepmultilingualpunctuation
-yake
+python-dotenv 
