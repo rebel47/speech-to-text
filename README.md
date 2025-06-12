@@ -26,6 +26,7 @@ This is a Streamlit-based application that transcribes audio files into text usi
 - Hindi
 - Chinese (Mandarin)
 - Arabic
+- Turkish
 
 ---
 
