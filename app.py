@@ -64,7 +64,8 @@ def transcribe_audio_with_google_parallel(audio_path, chunk_length_ms=60000, ove
     return " ".join(transcription)
 
 # Streamlit UI
-st.title("Lina's Audio to Text Transcription")
+st.set_page_config(page_title="Audio-to-Text")
+st.title("Audio to Text Transcription")
 st.text("       - Developed By: Mohammad Ayaz Alam")
 st.write("Upload an audio file, and we'll transcribe it into text using chunk processing.")
 
