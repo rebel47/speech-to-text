@@ -78,6 +78,7 @@ language_options = {
     "Hindi": "hi-IN",
     "Chinese (Mandarin)": "zh-CN",
     "Arabic": "ar-SA",
+    "Turkish": "tr-TR",
 }
 language_name = st.selectbox("Select the language for transcription:", list(language_options.keys()))
 language = language_options.get(language_name)
@@ -111,4 +112,3 @@ if uploaded_file:
                 file_name="transcription.txt",
                 mime="text/plain",
             )
-            
